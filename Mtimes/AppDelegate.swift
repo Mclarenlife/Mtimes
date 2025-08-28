@@ -14,7 +14,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // 应用保存的主题设置
+        applySavedTheme()
+        
         return true
+    }
+    
+    private func applySavedTheme() {
+        let savedMode = UserDefaults.standard.integer(forKey: "UserInterfaceStyle")
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            windowScene.windows.forEach { window in
+                let themeMode = UIUserInterfaceStyle(rawValue: savedMode) ?? .unspecified
+                window.overrideUserInterfaceStyle = themeMode
+                // 确保窗口背景色与系统背景色一致
+                window.backgroundColor = UIColor.systemBackground
+            }
+        }
     }
 
     // MARK: UISceneSession Lifecycle

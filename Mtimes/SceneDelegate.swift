@@ -15,8 +15,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        // This delegate does not imply the connecting scene or session is new (see `application:configurationForConnectingSceneSession` instead).
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        window = UIWindow(windowScene: windowScene)
+        let mainViewController = MainViewController()
+        window?.rootViewController = mainViewController
+        
+        // 设置窗口背景色，避免状态栏底部出现白色区域
+        window?.backgroundColor = UIColor.systemBackground
+        
+        // 应用保存的主题设置
+        applySavedTheme()
+        
+        window?.makeKeyAndVisible()
+    }
+    
+    private func applySavedTheme() {
+        let savedMode = UserDefaults.standard.integer(forKey: "UserInterfaceStyle")
+        let themeMode = UIUserInterfaceStyle(rawValue: savedMode) ?? .unspecified
+        window?.overrideUserInterfaceStyle = themeMode
+        // 确保窗口背景色与系统背景色一致
+        window?.backgroundColor = UIColor.systemBackground
+        print("SceneDelegate: 应用主题模式 \(themeMode.rawValue)")
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
