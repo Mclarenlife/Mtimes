@@ -69,24 +69,28 @@ class HomeViewController: UIViewController {
         // 暂停/继续按钮
         pauseResumeButton.setTitle("开始", for: .normal)
         pauseResumeButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        pauseResumeButton.backgroundColor = UIColor.systemBlue
-        pauseResumeButton.setTitleColor(UIColor.white, for: .normal)
+        pauseResumeButton.backgroundColor = UIColor.systemBackground
+        pauseResumeButton.setTitleColor(UIColor.label, for: .normal)
         pauseResumeButton.layer.cornerRadius = 20
+        pauseResumeButton.layer.borderWidth = 1
+        pauseResumeButton.layer.borderColor = UIColor.label.cgColor
         pauseResumeButton.addTarget(self, action: #selector(pauseResumeButtonTapped), for: .touchUpInside)
         
         // 重置按钮
         resetButton.setTitle("重置", for: .normal)
         resetButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        resetButton.backgroundColor = UIColor.systemGray
-        resetButton.setTitleColor(UIColor.white, for: .normal)
+        resetButton.backgroundColor = UIColor.systemBackground
+        resetButton.setTitleColor(UIColor.label, for: .normal)
         resetButton.layer.cornerRadius = 20
+        resetButton.layer.borderWidth = 1
+        resetButton.layer.borderColor = UIColor.label.cgColor
         resetButton.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
         
         // 保存按钮
         saveButton.setTitle("保存", for: .normal)
         saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        saveButton.backgroundColor = UIColor.systemGreen
-        saveButton.setTitleColor(UIColor.white, for: .normal)
+        saveButton.backgroundColor = UIColor.label
+        saveButton.setTitleColor(UIColor.systemBackground, for: .normal)
         saveButton.layer.cornerRadius = 20
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         
@@ -249,7 +253,7 @@ class HomeViewController: UIViewController {
         if !timeRecordManager.isTracking {
             // 未开始计时
             pauseResumeButton.setTitle("开始", for: .normal)
-            pauseResumeButton.backgroundColor = UIColor.systemBlue
+            pauseResumeButton.backgroundColor = UIColor.systemBackground
             resetButton.isEnabled = false
             resetButton.alpha = 0.5
             saveButton.isEnabled = false
@@ -257,7 +261,7 @@ class HomeViewController: UIViewController {
         } else if timeRecordManager.isPaused {
             // 计时已暂停
             pauseResumeButton.setTitle("继续", for: .normal)
-            pauseResumeButton.backgroundColor = UIColor.systemOrange
+            pauseResumeButton.backgroundColor = UIColor.systemBackground
             resetButton.isEnabled = true
             resetButton.alpha = 1.0
             saveButton.isEnabled = true
@@ -265,7 +269,7 @@ class HomeViewController: UIViewController {
         } else {
             // 计时进行中
             pauseResumeButton.setTitle("暂停", for: .normal)
-            pauseResumeButton.backgroundColor = UIColor.systemRed
+            pauseResumeButton.backgroundColor = UIColor.systemBackground
             resetButton.isEnabled = true
             resetButton.alpha = 1.0
             saveButton.isEnabled = true
@@ -318,7 +322,7 @@ class TimerProgressView: UIView {
         
         // 进度圆环
         progressLayer.fillColor = UIColor.clear.cgColor
-        progressLayer.strokeColor = UIColor.systemBlue.cgColor
+        progressLayer.strokeColor = UIColor.label.cgColor
         progressLayer.lineWidth = 8
         progressLayer.lineCap = .round
         progressLayer.strokeEnd = 0

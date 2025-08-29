@@ -33,7 +33,7 @@ class DayDetailViewController: UIViewController {
         let tableView = UITableView()
         tableView.backgroundColor = UIColor.systemBackground
         tableView.layer.cornerRadius = 16
-        tableView.layer.shadowColor = UIColor.black.cgColor
+        tableView.layer.shadowColor = UIColor.label.cgColor
         tableView.layer.shadowOffset = CGSize(width: 0, height: 2)
         tableView.layer.shadowOpacity = 0.1
         tableView.layer.shadowRadius = 8

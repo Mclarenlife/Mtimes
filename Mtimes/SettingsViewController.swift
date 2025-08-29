@@ -63,6 +63,7 @@ class SettingsViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.separator.cgColor
+        button.setTitleColor(UIColor.label, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(lightModeTapped), for: .touchUpInside)
         return button
@@ -76,6 +77,7 @@ class SettingsViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.separator.cgColor
+        button.setTitleColor(UIColor.label, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(darkModeTapped), for: .touchUpInside)
         return button
@@ -89,6 +91,7 @@ class SettingsViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.separator.cgColor
+        button.setTitleColor(UIColor.label, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(systemModeTapped), for: .touchUpInside)
         return button
@@ -130,6 +133,7 @@ class SettingsViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.separator.cgColor
+        button.setTitleColor(UIColor.label, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(exportDataTapped), for: .touchUpInside)
         return button
@@ -143,6 +147,7 @@ class SettingsViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.separator.cgColor
+        button.setTitleColor(UIColor.label, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(importDataTapped), for: .touchUpInside)
         return button
@@ -198,6 +203,7 @@ class SettingsViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.separator.cgColor
+        button.setTitleColor(UIColor.label, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(versionButtonTapped), for: .touchUpInside)
         return button
@@ -211,6 +217,7 @@ class SettingsViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.separator.cgColor
+        button.setTitleColor(UIColor.label, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(feedbackButtonTapped), for: .touchUpInside)
         return button
@@ -440,9 +447,9 @@ class SettingsViewController: UIViewController {
             selectedButton = systemModeButton
         }
         
-        selectedButton.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.1)
-        selectedButton.layer.borderColor = UIColor.systemBlue.cgColor
-        selectedButton.setTitleColor(UIColor.systemBlue, for: .normal)
+        selectedButton.backgroundColor = UIColor.label.withAlphaComponent(0.1)
+        selectedButton.layer.borderColor = UIColor.label.cgColor
+        selectedButton.setTitleColor(UIColor.label, for: .normal)
     }
     
     // MARK: - 数据管理方法
