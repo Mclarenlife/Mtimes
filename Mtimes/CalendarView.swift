@@ -2,6 +2,7 @@ import UIKit
 
 protocol CalendarViewDelegate: AnyObject {
     func calendarView(_ calendarView: CalendarView, didSelectDate date: Date)
+    func calendarView(_ calendarView: CalendarView, didChangeMonth date: Date)
 }
 
 class CalendarView: UIView {
@@ -9,7 +10,12 @@ class CalendarView: UIView {
     weak var delegate: CalendarViewDelegate?
     var timeRecordManager: TimeRecordManager!
     
-    private var currentDate = Date()
+    // 添加公共属性来访问当前显示的日期
+    var currentDate: Date {
+        return _currentDate
+    }
+    
+    private var _currentDate = Date()
     private var selectedDate: Date?
     
     private lazy var monthLabel: UILabel = {
@@ -140,18 +146,20 @@ class CalendarView: UIView {
     @objc private func previousMonthTapped() {
         let calendar = Calendar.current
         if let newDate = calendar.date(byAdding: .month, value: -1, to: currentDate) {
-            currentDate = newDate
+            _currentDate = newDate
             updateMonthLabel()
             calendarCollectionView.reloadData()
+            delegate?.calendarView(self, didChangeMonth: newDate)
         }
     }
     
     @objc private func nextMonthTapped() {
         let calendar = Calendar.current
         if let newDate = calendar.date(byAdding: .month, value: 1, to: currentDate) {
-            currentDate = newDate
+            _currentDate = newDate
             updateMonthLabel()
             calendarCollectionView.reloadData()
+            delegate?.calendarView(self, didChangeMonth: newDate)
         }
     }
     

@@ -38,14 +38,15 @@ class HomeViewController: UIViewController {
         view.backgroundColor = UIColor.systemBackground
         
         // 状态标签
-        statusLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        statusLabel.font = UIFont.systemFont(ofSize: 24, weight: .medium)
         statusLabel.textColor = UIColor.label
         statusLabel.textAlignment = .center
+        statusLabel.numberOfLines = 0
         statusLabel.text = "今日还未打卡"
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         
         // 计时器容器
-        timerContainer.backgroundColor = UIColor.systemGray6
+        timerContainer.backgroundColor = UIColor.clear
         timerContainer.layer.cornerRadius = 100
         timerContainer.translatesAutoresizingMaskIntoConstraints = false
         
@@ -60,9 +61,9 @@ class HomeViewController: UIViewController {
         progressView.translatesAutoresizingMaskIntoConstraints = false
         
         // 按钮堆栈视图
-        buttonStackView.axis = .horizontal
+        buttonStackView.axis = .vertical
         buttonStackView.distribution = .fillEqually
-        buttonStackView.spacing = 12
+        buttonStackView.spacing = 16
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         
         // 暂停/继续按钮
@@ -109,9 +110,9 @@ class HomeViewController: UIViewController {
             
             // 计时器容器
             timerContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            timerContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            timerContainer.widthAnchor.constraint(equalToConstant: 200),
-            timerContainer.heightAnchor.constraint(equalToConstant: 200),
+            timerContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -40),
+            timerContainer.widthAnchor.constraint(equalToConstant: 280),
+            timerContainer.heightAnchor.constraint(equalToConstant: 280),
             
             // 计时器标签
             timerLabel.centerXAnchor.constraint(equalTo: timerContainer.centerXAnchor),
@@ -120,14 +121,14 @@ class HomeViewController: UIViewController {
             // 进度视图
             progressView.centerXAnchor.constraint(equalTo: timerContainer.centerXAnchor),
             progressView.centerYAnchor.constraint(equalTo: timerContainer.centerYAnchor),
-            progressView.widthAnchor.constraint(equalToConstant: 180),
-            progressView.heightAnchor.constraint(equalToConstant: 180),
+            progressView.widthAnchor.constraint(equalToConstant: 260),
+            progressView.heightAnchor.constraint(equalToConstant: 260),
             
             // 按钮堆栈视图
             buttonStackView.topAnchor.constraint(equalTo: timerContainer.bottomAnchor, constant: 40),
             buttonStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            buttonStackView.widthAnchor.constraint(equalToConstant: 300),
-            buttonStackView.heightAnchor.constraint(equalToConstant: 40)
+            buttonStackView.widthAnchor.constraint(equalToConstant: 200),
+            buttonStackView.heightAnchor.constraint(equalToConstant: 160)
         ])
     }
     
@@ -185,7 +186,43 @@ class HomeViewController: UIViewController {
             let duration = timeRecordManager.totalDurationForDate(today)
             let hours = Int(duration / 3600)
             let minutes = Int((duration.truncatingRemainder(dividingBy: 3600)) / 60)
-            statusLabel.text = "今日逗留\(hours)小时\(minutes)分钟"
+            
+            // 创建富文本字符串
+            let attributedString = NSMutableAttributedString()
+            
+            // 第一行："今日逗留"
+            let firstLineAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 18, weight: .medium),
+                .foregroundColor: UIColor.label
+            ]
+            let firstLineString = NSAttributedString(string: "今日逗留", attributes: firstLineAttributes)
+            attributedString.append(firstLineString)
+            
+            // 添加换行符
+            let newlineAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 24, weight: .medium),
+                .foregroundColor: UIColor.label
+            ]
+            let newlineString = NSAttributedString(string: "\n", attributes: newlineAttributes)
+            attributedString.append(newlineString)
+            
+            // 第二行："x小时x分钟" - 加粗且字号更大
+            let secondLineAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 24, weight: .bold),
+                .foregroundColor: UIColor.label
+            ]
+            let secondLineString = NSAttributedString(string: "\(hours)小时\(minutes)分钟", attributes: secondLineAttributes)
+            attributedString.append(secondLineString)
+            
+            // 设置段落样式以增加行间距
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 12
+            paragraphStyle.alignment = .center
+            
+            // 将段落样式应用到整个字符串
+            attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+            
+            statusLabel.attributedText = attributedString
         } else {
             statusLabel.text = "今日还未打卡"
         }
@@ -200,7 +237,7 @@ class HomeViewController: UIViewController {
             let seconds = Int(elapsedTime.truncatingRemainder(dividingBy: 60))
             timerLabel.text = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
             
-            let progress = Float(min(elapsedTime / 3600, 1.0)) // 60分钟为一圈
+            let progress = Float(min(elapsedTime / (4 * 3600), 1.0)) // 4小时为一圈
             progressView.setProgress(progress, animated: true)
         } else {
             timerLabel.text = "开始"
@@ -243,7 +280,7 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func updateTimer() {
-        if timeRecordManager.isTracking && !timeRecordManager.isPaused {
+        if timeRecordManager.isTracking {
             updateTimerDisplay()
         }
     }

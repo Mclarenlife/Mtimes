@@ -4,6 +4,9 @@ class StatisticsViewController: UIViewController {
     
     var timeRecordManager: TimeRecordManager!
     
+    // 添加日历高度约束属性，用于动态调整
+    private var calendarHeightConstraint: NSLayoutConstraint!
+    
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -170,7 +173,6 @@ class StatisticsViewController: UIViewController {
             calendarView.topAnchor.constraint(equalTo: statsContainer.bottomAnchor, constant: 20),
             calendarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             calendarView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            calendarView.heightAnchor.constraint(equalToConstant: 350),
             
             recordsTableView.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 20),
             recordsTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
@@ -178,6 +180,11 @@ class StatisticsViewController: UIViewController {
             recordsTableView.heightAnchor.constraint(equalToConstant: 400),
             recordsTableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
+        
+        // 设置日历高度约束
+        let initialCalendarHeight = calculateCalendarHeight()
+        calendarHeightConstraint = calendarView.heightAnchor.constraint(equalToConstant: initialCalendarHeight)
+        calendarHeightConstraint.isActive = true
     }
     
     private func updateStats() {
@@ -193,6 +200,39 @@ class StatisticsViewController: UIViewController {
         } else {
             let minutes = Int(timeRecordManager.totalDuration / 60)
             totalDurationValueLabel.text = "\(minutes)分钟"
+        }
+    }
+    
+    // 添加计算日历高度的方法
+    private func calculateCalendarHeight() -> CGFloat {
+        let calendar = Calendar.current
+        // 使用CalendarView当前显示的月份，而不是当前系统日期
+        let currentMonthDate = calendarView.currentDate
+        let range = calendar.range(of: .day, in: .month, for: currentMonthDate)!
+        let firstWeekday = calendar.component(.weekday, from: currentMonthDate)
+        let offsetDays = firstWeekday - 1
+        
+        // 计算需要的行数
+        let totalDays = range.count + offsetDays
+        let rows = ceil(Double(totalDays) / 7.0)
+        
+        // 基础高度：月份标签 + 星期标签 + 日历网格 + 边距
+        let monthLabelHeight: CGFloat = 60  // 月份标签高度
+        let weekdaysHeight: CGFloat = 30    // 星期标签高度
+        let calendarGridHeight = rows * 50  // 每行50像素
+        let margins: CGFloat = 55           // 上下边距
+        
+        return monthLabelHeight + weekdaysHeight + calendarGridHeight + margins
+    }
+    
+    // 添加更新日历高度的方法
+    private func updateCalendarHeight() {
+        let newHeight = calculateCalendarHeight()
+        calendarHeightConstraint.constant = newHeight
+        
+        // 使用动画更新约束
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -339,6 +379,11 @@ extension StatisticsViewController: CalendarViewDelegate {
             let navController = UINavigationController(rootViewController: editVC)
             present(navController, animated: true)
         }
+    }
+    
+    func calendarView(_ calendarView: CalendarView, didChangeMonth date: Date) {
+        // 月份切换时更新日历高度
+        updateCalendarHeight()
     }
 }
 
