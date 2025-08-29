@@ -193,7 +193,8 @@ class HomeViewController: UIViewController {
     
     private func updateTimerDisplay() {
         if timeRecordManager.isTracking {
-            let elapsedTime = timeRecordManager.currentElapsedTime
+            // 使用新的基于时间差的计算方法
+            let elapsedTime = timeRecordManager.getCurrentElapsedTime()
             let hours = Int(elapsedTime / 3600)
             let minutes = Int((elapsedTime.truncatingRemainder(dividingBy: 3600)) / 60)
             let seconds = Int(elapsedTime.truncatingRemainder(dividingBy: 60))

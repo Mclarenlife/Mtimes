@@ -9,6 +9,8 @@ class TimeRecordManager: ObservableObject {
     @Published var currentElapsedTime: TimeInterval = 0
     @Published var pausedElapsedTime: TimeInterval = 0
     
+    // 新增：记录上次更新时间，用于计算时间差
+    private var lastUpdateTime: Date?
     private var timer: Timer?
     private let userDefaults = UserDefaults.standard
     private let recordsKey = "TimeRecords"
@@ -16,6 +18,7 @@ class TimeRecordManager: ObservableObject {
     private let pausedKey = "IsPaused"
     private let startTimeKey = "StartTime"
     private let pausedTimeKey = "PausedElapsedTime"
+    private let lastUpdateTimeKey = "LastUpdateTime"
     
     init() {
         loadRecords()
@@ -46,6 +49,11 @@ class TimeRecordManager: ObservableObject {
             userDefaults.removeObject(forKey: startTimeKey)
         }
         userDefaults.set(pausedElapsedTime, forKey: pausedTimeKey)
+        if let lastUpdateTime = lastUpdateTime {
+            userDefaults.set(lastUpdateTime, forKey: lastUpdateTimeKey)
+        } else {
+            userDefaults.removeObject(forKey: lastUpdateTimeKey)
+        }
     }
     
     private func loadTrackingState() {
@@ -56,11 +64,18 @@ class TimeRecordManager: ObservableObject {
         if let startTime = userDefaults.object(forKey: startTimeKey) as? Date {
             currentStartTime = startTime
             if isTracking {
-                startTimer()
+                // 恢复计时状态时，立即计算经过的时间
+                calculateElapsedTime()
                 if isPaused {
                     currentElapsedTime = pausedElapsedTime
                 }
+                startTimer()
             }
+        }
+        
+        // 加载上次更新时间
+        if let lastUpdate = userDefaults.object(forKey: lastUpdateTimeKey) as? Date {
+            lastUpdateTime = lastUpdate
         }
     }
     
@@ -73,6 +88,7 @@ class TimeRecordManager: ObservableObject {
         currentStartTime = Date()
         currentElapsedTime = 0
         pausedElapsedTime = 0
+        lastUpdateTime = Date()
         startTimer()
         saveTrackingState()
     }
@@ -90,7 +106,9 @@ class TimeRecordManager: ObservableObject {
         guard isTracking, isPaused else { return }
         
         isPaused = false
+        // 恢复时，调整开始时间以保持经过的时间不变
         currentStartTime = Date().addingTimeInterval(-pausedElapsedTime)
+        lastUpdateTime = Date()
         startTimer()
         saveTrackingState()
     }
@@ -109,6 +127,7 @@ class TimeRecordManager: ObservableObject {
         currentStartTime = nil
         currentElapsedTime = 0
         pausedElapsedTime = 0
+        lastUpdateTime = nil
         stopTimer()
         saveTrackingState()
     }
@@ -119,21 +138,62 @@ class TimeRecordManager: ObservableObject {
         currentStartTime = nil
         currentElapsedTime = 0
         pausedElapsedTime = 0
+        lastUpdateTime = nil
         stopTimer()
         saveTrackingState()
     }
     
-    // MARK: - 计时器
+    // MARK: - 计时器 - 改为基于时间差的计算
     private func startTimer() {
+        // 立即计算一次经过的时间
+        calculateElapsedTime()
+        
+        // 启动定时器，每秒更新一次
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self = self, let startTime = self.currentStartTime else { return }
-            self.currentElapsedTime = Date().timeIntervalSince(startTime)
+            self?.calculateElapsedTime()
         }
     }
     
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
+    }
+    
+    // 新增：基于系统时间差计算经过的时间
+    private func calculateElapsedTime() {
+        guard let startTime = currentStartTime else { return }
+        
+        let now = Date()
+        let elapsed = now.timeIntervalSince(startTime)
+        
+        // 如果暂停了，使用暂停时的时间
+        if isPaused {
+            currentElapsedTime = pausedElapsedTime
+        } else {
+            currentElapsedTime = elapsed
+        }
+        
+        // 更新最后更新时间
+        lastUpdateTime = now
+        
+        // 通知UI更新
+        DispatchQueue.main.async {
+            self.objectWillChange.send()
+        }
+    }
+    
+    // 新增：获取当前经过的时间（用于外部调用）
+    func getCurrentElapsedTime() -> TimeInterval {
+        guard let startTime = currentStartTime else { return 0 }
+        
+        let now = Date()
+        let elapsed = now.timeIntervalSince(startTime)
+        
+        if isPaused {
+            return pausedElapsedTime
+        } else {
+            return elapsed
+        }
     }
     
     // MARK: - 统计功能
@@ -193,14 +253,21 @@ class TimeRecordManager: ObservableObject {
     }
     
     @objc private func appDidEnterBackground() {
+        // 进入后台时，计算并保存当前经过的时间
+        if isTracking && !isPaused {
+            calculateElapsedTime()
+        }
         stopTimer()
         saveTrackingState()
     }
     
     @objc private func appWillEnterForeground() {
         if isTracking {
-            currentStartTime = Date().addingTimeInterval(-pausedElapsedTime)
-            startTimer()
+            // 进入前台时，立即计算经过的时间，确保计时准确
+            calculateElapsedTime()
+            if !isPaused {
+                startTimer()
+            }
             saveTrackingState()
         }
     }
@@ -238,6 +305,7 @@ class TimeRecordManager: ObservableObject {
         currentStartTime = nil
         currentElapsedTime = 0
         pausedElapsedTime = 0
+        lastUpdateTime = nil
         stopTimer()
         
         // 保存清空后的状态
