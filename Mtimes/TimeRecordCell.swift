@@ -21,9 +21,9 @@ class TimeRecordCell: UITableViewCell {
     private lazy var durationLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = UIColor.systemGreen
+        label.textColor = UIColor.label
         label.textAlignment = .center
-        label.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.1)
+        label.backgroundColor = UIColor.label.withAlphaComponent(0.1)
         label.layer.cornerRadius = 8
         label.layer.masksToBounds = true
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +42,7 @@ class TimeRecordCell: UITableViewCell {
     private lazy var recordNumberLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = UIColor.systemBlue
+        label.textColor = UIColor.label
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

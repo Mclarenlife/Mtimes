@@ -27,7 +27,7 @@ class MainViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.9)
         view.layer.cornerRadius = 20
-        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowColor = UIColor.label.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: -2)
         view.layer.shadowOpacity = 0.15
         view.layer.shadowRadius = 8
@@ -39,7 +39,7 @@ class MainViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("首页", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        button.setTitleColor(UIColor.systemBlue, for: .normal)
+        button.setTitleColor(UIColor.label, for: .normal)
         button.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -115,7 +115,7 @@ class MainViewController: UIViewController {
     }
     
     private func updateButtonStates(selectedButton: UIButton, unselectedButtons: [UIButton]) {
-        selectedButton.setTitleColor(UIColor.systemBlue, for: .normal)
+        selectedButton.setTitleColor(UIColor.label, for: .normal)
         unselectedButtons.forEach { button in
             button.setTitleColor(UIColor.systemGray, for: .normal)
         }

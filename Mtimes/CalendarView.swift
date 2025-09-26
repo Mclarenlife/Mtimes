@@ -31,7 +31,7 @@ class CalendarView: UIView {
         let button = UIButton(type: .system)
         button.setTitle("‹", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        button.setTitleColor(UIColor.systemBlue, for: .normal)
+        button.setTitleColor(UIColor.label, for: .normal)
         button.addTarget(self, action: #selector(previousMonthTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -41,7 +41,7 @@ class CalendarView: UIView {
         let button = UIButton(type: .system)
         button.setTitle("›", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        button.setTitleColor(UIColor.systemBlue, for: .normal)
+        button.setTitleColor(UIColor.label, for: .normal)
         button.addTarget(self, action: #selector(nextMonthTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -87,7 +87,7 @@ class CalendarView: UIView {
     private func setupUI() {
         backgroundColor = UIColor.systemBackground
         layer.cornerRadius = 16
-        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowColor = UIColor.label.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 0.1
         layer.shadowRadius = 8
@@ -330,7 +330,7 @@ class CircularProgressView: UIView {
         backgroundLayer.lineCap = .round
         
         progressLayer.fillColor = UIColor.clear.cgColor
-        progressLayer.strokeColor = UIColor.systemBlue.cgColor
+        progressLayer.strokeColor = UIColor.label.cgColor
         progressLayer.lineWidth = 3
         progressLayer.lineCap = .round
         

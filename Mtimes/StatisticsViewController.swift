@@ -24,7 +24,7 @@ class StatisticsViewController: UIViewController {
     private lazy var effectiveDaysLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.textColor = UIColor.systemBlue
+        label.textColor = UIColor.label
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -34,7 +34,7 @@ class StatisticsViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = UIColor.systemBackground
         view.layer.cornerRadius = 16
-        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowColor = UIColor.label.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowOpacity = 0.1
         view.layer.shadowRadius = 8
@@ -55,7 +55,7 @@ class StatisticsViewController: UIViewController {
     private lazy var totalRecordsValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = UIColor.systemBlue
+        label.textColor = UIColor.label
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -74,7 +74,7 @@ class StatisticsViewController: UIViewController {
     private lazy var totalDurationValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = UIColor.systemGreen
+        label.textColor = UIColor.label
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -92,7 +92,7 @@ class StatisticsViewController: UIViewController {
         let tableView = UITableView()
         tableView.backgroundColor = UIColor.systemBackground
         tableView.layer.cornerRadius = 16
-        tableView.layer.shadowColor = UIColor.black.cgColor
+        tableView.layer.shadowColor = UIColor.label.cgColor
         tableView.layer.shadowOffset = CGSize(width: 0, height: 2)
         tableView.layer.shadowOpacity = 0.1
         tableView.layer.shadowRadius = 8
