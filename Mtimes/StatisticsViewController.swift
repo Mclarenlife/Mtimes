@@ -80,6 +80,7 @@ class StatisticsViewController: UIViewController {
         return label
     }()
     
+    
     private lazy var calendarView: CalendarView = {
         let calendar = CalendarView()
         calendar.timeRecordManager = timeRecordManager
@@ -201,6 +202,7 @@ class StatisticsViewController: UIViewController {
             let minutes = Int(timeRecordManager.totalDuration / 60)
             totalDurationValueLabel.text = "\(minutes)分钟"
         }
+        
     }
     
     // 添加计算日历高度的方法
